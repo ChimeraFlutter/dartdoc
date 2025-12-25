@@ -83,11 +83,12 @@ void main(List<String> arguments) async {
     // 生成 Markdown
     print('Generating Markdown documentation...');
     var absoluteInputDir = Directory(inputDir).absolute.path;
-    var generator = MarkdownGenerator(outputDir, verbose: verbose, simple: simple, projectRoot: absoluteInputDir);
+    var absoluteOutputDir = Directory(outputDir).absolute.path;
+    var generator = MarkdownGenerator(absoluteOutputDir, verbose: verbose, simple: simple, projectRoot: absoluteInputDir);
     generator.generate(packageGraph);
 
     print('');
-    print('Done! Documentation generated in: $outputDir');
+    print('Done! Documentation generated in: $absoluteOutputDir');
 
     // 清理
     packageGraph.dispose();

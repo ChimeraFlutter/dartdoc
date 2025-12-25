@@ -24,12 +24,17 @@ class MarkdownGenerator {
       _generatePackageIndex(packageGraph);
     }
 
-    for (var package in packageGraph.localPackages) {
-      _log('Generating docs for package: ${package.name}');
+    // 只为默认包（项目自己的包）生成文档
+    var defaultPackage = packageGraph.defaultPackage;
+    _log('Generating docs for package: ${defaultPackage.name}');
 
-      for (var library in package.libraries.whereDocumented) {
-        _generateLibrary(library);
+    for (var library in defaultPackage.libraries.whereDocumented) {
+      // 过滤掉 packages/ 目录下的库，只保留 lib/ 目录的库
+      var sourcePath = library.element.firstFragment.source.fullName;
+      if (sourcePath.contains('/packages/') || sourcePath.contains('\\packages\\')) {
+        continue;
       }
+      _generateLibrary(library);
     }
 
     _log('Markdown generation complete!');
@@ -62,13 +67,13 @@ class MarkdownGenerator {
   }
 
   void _generateLibrary(Library library) {
-    var libDir = p.join(outputDir, _sanitizeFileName(library.name));
-    Directory(libDir).createSync(recursive: true);
-
     if (simple) {
-      _generateLibrarySimple(library, libDir);
+      _generateLibrarySimple(library, '');
       return;
     }
+
+    var libDir = p.join(outputDir, _sanitizeFileName(library.name));
+    Directory(libDir).createSync(recursive: true);
 
     var md = StringBuffer();
 
@@ -531,6 +536,10 @@ class MarkdownGenerator {
 
       // 输出文件路径与源文件结构一致
       var mdFileName = relativeSrc.replaceAll('.dart', '.md');
+      // 过滤掉 packages/ 目录下的文件
+      if (mdFileName.startsWith('packages/') || mdFileName.startsWith('packages\\')) {
+        continue;
+      }
       _writeFile(mdFileName, md.toString());
     }
   }
