@@ -518,3 +518,35 @@ Generated docs include:
 [GitHub Issue Tracker]: https://github.com/dart-lang/dartdoc/issues
 [contributor docs]: https://github.com/dart-lang/dartdoc/blob/main/CONTRIBUTING.md
 [dartdoc license]: https://github.com/dart-lang/dartdoc/blob/main/LICENSE
+
+---
+
+## Markdown Generator (dartdoc_md)
+
+生成 Markdown 格式的 API 文档，适合 AI 阅读和代码分析。
+
+### 使用方法
+
+```bash
+# 标准模式
+dart run bin/dartdoc_md.dart --input <input_dir> --output <output_dir>
+
+# 简单模式（AI友好格式，包含类型信息和行号）
+dart run bin/dartdoc_md.dart --input <input_dir> --output <output_dir> --simple
+```
+
+### 参数说明
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--input` | 输入目录（Dart/Flutter 项目路径） | 当前目录 |
+| `--output` | 输出目录 | `doc/md` |
+| `--simple` | 简单输出模式（AI友好格式） | false |
+| `--verbose` | 详细输出 | false |
+| `--help` | 显示帮助 | - |
+
+### 示例
+
+```bash
+dart run bin/dartdoc_md.dart --input /path/to/flutter_project --output /path/to/output --simple
+```

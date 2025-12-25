@@ -22,6 +22,7 @@ void main(List<String> arguments) async {
     ..addOption('input', abbr: 'i', help: 'Input directory', defaultsTo: '.')
     ..addOption('output', abbr: 'o', help: 'Output directory', defaultsTo: 'doc/md')
     ..addFlag('verbose', abbr: 'v', help: 'Verbose output', defaultsTo: false)
+    ..addFlag('simple', abbr: 's', help: 'Simple output (file path, variables, functions with line numbers)', defaultsTo: false)
     ..addFlag('help', abbr: 'h', help: 'Show help', negatable: false);
 
   ArgResults args;
@@ -46,6 +47,7 @@ void main(List<String> arguments) async {
   var inputDir = args['input'] as String;
   var outputDir = args['output'] as String;
   var verbose = args['verbose'] as bool;
+  var simple = args['simple'] as bool;
 
   print('Dartdoc Markdown Generator');
   print('Input: $inputDir');
@@ -80,7 +82,8 @@ void main(List<String> arguments) async {
 
     // 生成 Markdown
     print('Generating Markdown documentation...');
-    var generator = MarkdownGenerator(outputDir, verbose: verbose);
+    var absoluteInputDir = Directory(inputDir).absolute.path;
+    var generator = MarkdownGenerator(outputDir, verbose: verbose, simple: simple, projectRoot: absoluteInputDir);
     generator.generate(packageGraph);
 
     print('');
